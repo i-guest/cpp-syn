@@ -63,6 +63,7 @@
       font-size: 1.05rem;
       color: var(--muted);
     }
+
     .toolbar {
       position: sticky;
       top: 0;
@@ -302,7 +303,7 @@
         examples: [
           "<code>5 / 2</code> gives <code>2</code> because both values are ints.",
           "<code>5.0 / 2</code> gives <code>2.5</code> because one value is floating point.",
-          "Use <code>static_cast<double>(a) / b</code> when you need a decimal result."
+          "Use <code>static_cast&lt;double&gt;(a) / b</code> when you need a decimal result."
         ],
         snippet: "cout << 5 / 2 << endl;\ncout << 5.0 / 2 << endl;\ncout << static_cast<double>(5) / 2 << endl;",
         question: "Why does integer division remove the decimal part?",
@@ -1931,6 +1932,7 @@
   </script>
 </body>
 </html>
+
 
 
 <!--C++ Course Notes Summary (Pages 1–120)
