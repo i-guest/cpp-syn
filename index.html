@@ -1,3 +1,1939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GS200 C++ Beginner Guide</title>
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --paper: #fffdf8;
+      --ink: #1f2937;
+      --muted: #5f6b7a;
+      --accent: #c2410c;
+      --accent-soft: #fed7aa;
+      --line: #e7dccb;
+      --code: #1c1917;
+      --code-ink: #f5f5f4;
+      --card: #fffaf1;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at top left, #fff1d6 0, transparent 30%),
+        radial-gradient(circle at top right, #fde7d7 0, transparent 28%),
+        linear-gradient(180deg, #f7f1e7 0%, #f1eadf 100%);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 48px 20px 28px;
+      text-align: center;
+      border-bottom: 1px solid rgba(194, 65, 12, 0.15);
+      background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.15));
+      backdrop-filter: blur(8px);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      line-height: 1.04;
+      color: #111827;
+    }
+
+    .subtitle {
+      max-width: 860px;
+      margin: 14px auto 0;
+      font-size: 1.05rem;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 14px 16px;
+      background: rgba(255, 250, 241, 0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(194, 65, 12, 0.15);
+    }
+
+    .toolbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: 12px;
+    }
+
+    .jump-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .jump-links a {
+      text-decoration: none;
+      color: #7c2d12;
+      background: var(--accent-soft);
+      border: 1px solid rgba(194, 65, 12, 0.15);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+    }
+
+    .jump-links a:hover,
+    .jump-links a:focus-visible {
+      background: #fdba74;
+      outline: none;
+    }
+
+    .search-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    #search {
+      width: min(680px, 100%);
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.85);
+      font: inherit;
+      color: var(--ink);
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 16px 56px;
+    }
+
+    .section-block {
+      margin-bottom: 28px;
+      background: rgba(255, 253, 248, 0.72);
+      border: 1px solid rgba(194, 65, 12, 0.1);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 12px 32px rgba(120, 53, 15, 0.08);
+    }
+
+    .section-title {
+      margin: 4px 0 18px;
+      font-size: clamp(1.45rem, 3vw, 2.05rem);
+      color: #7c2d12;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 8px 22px rgba(28, 25, 23, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card[hidden] { display: none; }
+
+    .page-tag {
+      display: inline-block;
+      width: fit-content;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #fff2dc;
+      color: #9a3412;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .topic {
+      margin: 0;
+      font-size: 1.18rem;
+      line-height: 1.28;
+      color: #111827;
+    }
+
+    .label {
+      font-weight: 700;
+      color: #7c2d12;
+      margin-right: 6px;
+    }
+
+    .block {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    ul.examples {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--ink);
+    }
+
+    ul.examples li {
+      margin-bottom: 6px;
+    }
+
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      background: rgba(148, 163, 184, 0.15);
+      padding: 1px 5px;
+      border-radius: 6px;
+      font-size: 0.95em;
+    }
+
+    .snippet {
+      margin: 0;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--code);
+      color: var(--code-ink);
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .answer {
+      padding: 12px;
+      border-left: 4px solid var(--accent);
+      background: #fff7ed;
+      border-radius: 10px;
+    }
+
+    .meta {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 16px 48px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 700px) {
+      header { padding-top: 34px; }
+      .section-block { padding: 14px; }
+      .card { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">GS200 course companion</p>
+    <h1>GS200 C++ Beginner Guide</h1>
+    <p class="subtitle">All 120 pages from the GS200 analysis combined into one standalone HTML file, with beginner explanations, direct answers, and multiple quick examples for each page.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="jump-links" id="jumpLinks"></div>
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Search by page number, topic, keyword, or question...">
+      </div>
+    </div>
+  </div>
+
+  <main id="content"></main>
+
+  <footer>
+    Built from gs200_analysis.txt and gs200_beginner_examples_questions.txt as a single offline study page.
+  </footer>
+
+  <script>
+    const pages = [
+      {
+        page: 1,
+        title: "Introduction to C++, main(), cout, cin, headers",
+        explain: "C++ programs start running from main(). Headers add library features, cout sends output to the screen, and cin reads input from the keyboard.",
+        examples: [
+          "Use <code>#include &lt;iostream&gt;</code> when you want <code>cout</code> and <code>cin</code>.",
+          "A first program can print <code>Hello</code> with <code>cout</code>.",
+          "Read a user's age with <code>cin &gt;&gt; age;</code> inside <code>main()</code>."
+        ],
+        snippet: "#include <iostream>\nusing namespace std;\n\nint main() {\n    string name;\n    cout << \"Hello\\nEnter your name: \";\n    cin >> name;\n    cout << \"Welcome, \" << name << endl;\n    return 0;\n}",
+        question: "What is the role of main() in a C++ program?",
+        answer: "main() is the program's starting point. When you run a C++ program, execution begins there."
+      },
+      {
+        page: 2,
+        title: "Variables and data types",
+        explain: "Variables store values. The data type tells C++ what kind of value is stored, such as a whole number, decimal number, or character.",
+        examples: [
+          "Use <code>int age = 18;</code> for whole numbers.",
+          "Use <code>float height = 5.8f;</code> for decimal values.",
+          "Combine values in arithmetic like <code>total = a + b</code>."
+        ],
+        snippet: "int age = 19;\nfloat height = 5.9f;\ncout << age << endl;\ncout << height << endl;",
+        question: "When would you use int instead of float?",
+        answer: "Use int when the value should not have a decimal part, such as marks, age, count, or index positions."
+      },
+      {
+        page: 3,
+        title: "Integer vs float division",
+        explain: "If both values are integers, C++ does integer division and drops the decimal part. If one value is decimal, the result keeps the fraction.",
+        examples: [
+          "<code>5 / 2</code> gives <code>2</code> because both values are ints.",
+          "<code>5.0 / 2</code> gives <code>2.5</code> because one value is floating point.",
+          "Use <code>static_cast<double>(a) / b</code> when you need a decimal result."
+        ],
+        snippet: "cout << 5 / 2 << endl;\ncout << 5.0 / 2 << endl;\ncout << static_cast<double>(5) / 2 << endl;",
+        question: "Why does integer division remove the decimal part?",
+        answer: "Because ints can store only whole numbers, so C++ keeps only the whole-number part of the result."
+      },
+      {
+        page: 4,
+        title: "Math functions and escape characters",
+        explain: "The <code>&lt;cmath&gt;</code> header gives useful math functions like <code>sqrt()</code> and <code>pow()</code>. Escape characters add special formatting inside strings.",
+        examples: [
+          "<code>sqrt(25)</code> returns <code>5</code>.",
+          "<code>pow(2, 3)</code> returns <code>8</code>.",
+          "<code>\n</code> moves text to a new line and <code>\t</code> adds a tab space."
+        ],
+        snippet: "#include <cmath>\ncout << sqrt(25) << endl;\ncout << pow(2, 3) << endl;\ncout << \"Line 1\\nLine 2\" << endl;",
+        question: "What does the escape character \n do?",
+        answer: "It starts a new line, so the next text appears underneath instead of on the same line."
+      },
+      {
+        page: 5,
+        title: "Modulo operator and precedence",
+        explain: "The modulo operator gives the remainder after division. Operator precedence decides which parts of an expression are calculated first.",
+        examples: [
+          "<code>17 % 2</code> is <code>1</code>, so 17 is odd.",
+          "<code>18 % 2</code> is <code>0</code>, so 18 is even.",
+          "In <code>2 + 3 * 4</code>, multiplication happens before addition."
+        ],
+        snippet: "cout << 17 % 2 << endl;\ncout << 18 % 2 << endl;\ncout << 2 + 3 * 4 << endl;\ncout << (2 + 3) * 4 << endl;",
+        question: "Which part is calculated first in 2 + 3 * 4?",
+        answer: "The multiplication part, <code>3 * 4</code>, is calculated first because <code>*</code> has higher precedence than <code>+</code>."
+      },
+      {
+        page: 6,
+        title: "char and ASCII basics",
+        explain: "A <code>char</code> stores one character, such as <code>'A'</code> or <code>'7'</code>. Each character also has a number code in ASCII.",
+        examples: [
+          "<code>'A'</code> has ASCII value 65.",
+          "<code>'a'</code> has ASCII value 97.",
+          "You can compare characters like <code>ch &gt;= '0' &amp;&amp; ch &lt;= '9'</code> to detect digits."
+        ],
+        snippet: "char ch = 'A';\ncout << ch << endl;\ncout << int(ch) << endl;",
+        question: "What is the difference between a character and its ASCII number?",
+        answer: "The character is the symbol you see, like <code>'A'</code>. The ASCII number is the numeric code the computer uses to represent that symbol."
+      },
+      {
+        page: 7,
+        title: "Strings and character arrays",
+        explain: "A string stores text as a full word or sentence. A single char stores only one character, and a character array is the older C-style way to store text.",
+        examples: [
+          "<code>string name = \"Ali\";</code> stores text safely and easily.",
+          "<code>char grade = 'A';</code> stores only one character.",
+          "<code>char word[] = \"cat\";</code> stores a C-style string."
+        ],
+        snippet: "#include <string>\nstring name = \"Sara\";\nchar grade = 'A';\nchar city[] = \"Lahore\";\ncout << name << endl;",
+        question: "How is a string different from a single char?",
+        answer: "A string can hold many characters together, while a char can hold only one character at a time."
+      },
+      {
+        page: 8,
+        title: "Increment, decrement, and relational operators",
+        explain: "Increment and decrement change a value by 1. Relational operators compare values and give a true or false result.",
+        examples: [
+          "<code>x++</code> uses the current value first, then adds 1.",
+          "<code>++x</code> adds 1 first, then uses the new value.",
+          "<code>&gt;</code>, <code>&lt;</code>, <code>==</code>, and <code>!=</code> compare values."
+        ],
+        snippet: "int x = 5;\ncout << x++ << endl;\ncout << x << endl;\ncout << (x > 5) << endl;",
+        question: "What is the difference between ++x and x++?",
+        answer: "<code>++x</code> increases the value before it is used. <code>x++</code> uses the old value first, then increases it."
+      },
+      {
+        page: 9,
+        title: "Assignment shorthand operators",
+        explain: "Shorthand assignment operators update a variable using a shorter form. They save typing and make repeated updates easier to read.",
+        examples: [
+          "<code>x += 4</code> means <code>x = x + 4</code>.",
+          "<code>total -= 3</code> means <code>total = total - 3</code>.",
+          "You can also use <code>*=</code>, <code>/=</code>, and <code>%=</code>."
+        ],
+        snippet: "int total = 10;\ntotal += 5;\ntotal -= 3;\ncout << total << endl;",
+        question: "What does x += 4 mean in normal assignment form?",
+        answer: "It means <code>x = x + 4</code>."
+      },
+      {
+        page: 10,
+        title: "Logical operators",
+        explain: "Logical operators combine conditions. <code>&amp;&amp;</code> means AND, <code>||</code> means OR, and <code>!</code> means NOT.",
+        examples: [
+          "Use <code>age &gt;= 18 &amp;&amp; age &lt;= 60</code> when both conditions must be true.",
+          "Use <code>day == 6 || day == 7</code> when either condition can be true.",
+          "Use <code>!isReady</code> to mean 'not ready'."
+        ],
+        snippet: "int n = 15;\ncout << (n > 10 && n < 20) << endl;\ncout << (n < 5 || n == 15) << endl;",
+        question: "When should you use && instead of ||?",
+        answer: "Use <code>&amp;&amp;</code> when every condition must be true at the same time."
+      },
+      {
+        page: 11,
+        title: "Code tracing and nested operations",
+        explain: "Tracing means following a program step by step to see how values change. It helps you predict output before you run the code.",
+        examples: [
+          "Track <code>x</code> after each assignment, not just the final result.",
+          "Write values in a small table while stepping through an <code>if</code> block.",
+          "Tracing helps you catch logic mistakes early."
+        ],
+        snippet: "int x = 3, y = 4;\nif (x < y) {\n    x = x + 2;\n    y = y * 2;\n}\ncout << x << \" \" << y << endl;",
+        question: "Why is tracing useful before running a program?",
+        answer: "Tracing helps you understand the logic, spot wrong updates, and predict what the program should do."
+      },
+      {
+        page: 12,
+        title: "Variable naming rules and memory size concepts",
+        explain: "Variable names must follow C++ rules, and each data type uses memory space. Good names also make code easier to understand.",
+        examples: [
+          "<code>studentAge</code> is valid, but <code>2value</code> is not.",
+          "<code>sizeof(int)</code> shows the number of bytes used by an int on your system.",
+          "Names like <code>marks</code> or <code>totalPrice</code> are clearer than <code>x</code>."
+        ],
+        snippet: "int studentAge = 20;\ncout << sizeof(int) << endl;\ncout << sizeof(double) << endl;",
+        question: "Why are clear variable names better than names like a or x1?",
+        answer: "Clear names explain the purpose of the value, so the program is easier to read, debug, and maintain."
+      },
+      {
+        page: 13,
+        title: "Basic if statements",
+        explain: "An if statement runs code only when its condition is true. If the condition is false, that block is skipped.",
+        examples: [
+          "Print <code>Pass</code> if marks are at least 40.",
+          "Check if a number is positive with <code>if (n &gt; 0)</code>.",
+          "Use braces to keep the block clear, especially for beginners."
+        ],
+        snippet: "int marks = 67;\nif (marks >= 40) {\n    cout << \"Pass\" << endl;\n}",
+        question: "What happens if the if condition is false?",
+        answer: "The code inside the if block does not run, and the program moves to the next statement after the block."
+      },
+      {
+        page: 14,
+        title: "if-else logic and ASCII character checking",
+        explain: "An if-else statement chooses between two paths. ASCII ranges let you test whether a character is uppercase, lowercase, or a digit.",
+        examples: [
+          "Uppercase letters are between <code>'A'</code> and <code>'Z'</code>.",
+          "Lowercase letters are between <code>'a'</code> and <code>'z'</code>.",
+          "Use <code>if</code> for one case and <code>else</code> for the other."
+        ],
+        snippet: "char ch;\ncin >> ch;\nif (ch >= 'A' && ch <= 'Z') {\n    cout << \"Uppercase\" << endl;\n} else {\n    cout << \"Not uppercase\" << endl;\n}",
+        question: "How can ASCII help you compare letters?",
+        answer: "ASCII gives letters numeric codes, so you can compare character ranges like normal numbers."
+      },
+      {
+        page: 15,
+        title: "for loops and even numbers",
+        explain: "A for loop repeats code a fixed number of times. It is useful when you know where to start, when to stop, and how to update the counter.",
+        examples: [
+          "Print 2, 4, 6, ... 20 with <code>i += 2</code>.",
+          "Use <code>for (int i = 0; i &lt; 5; i++)</code> for five repetitions.",
+          "The loop variable usually changes in the third part of the header."
+        ],
+        snippet: "for (int i = 2; i <= 20; i += 2) {\n    cout << i << \" \";\n}",
+        question: "Which part of a for loop updates the counter?",
+        answer: "The third part of the for loop header updates the counter, such as <code>i++</code> or <code>i += 2</code>."
+      },
+      {
+        page: 16,
+        title: "Odd numbers and alphabets with loops",
+        explain: "Loops are useful for repeated patterns, including counting odd numbers or printing letters in order.",
+        examples: [
+          "Print odd numbers with <code>for (int i = 1; i &lt;= 15; i += 2)</code>.",
+          "Print letters by looping from <code>'A'</code> to <code>'Z'</code>.",
+          "A loop removes the need to write the same print statement many times."
+        ],
+        snippet: "for (int i = 1; i <= 15; i += 2) cout << i << \" \";\nfor (char ch = 'A'; ch <= 'Z'; ch++) cout << ch << \" \";",
+        question: "How does a loop help avoid repeated code?",
+        answer: "A loop lets one block of code run many times, so you do not have to copy the same statements again and again."
+      },
+      {
+        page: 17,
+        title: "Multi-condition grading systems",
+        explain: "When you have more than two choices, <code>if-else if</code> is useful. It checks conditions in order and picks the first true one.",
+        examples: [
+          "Use one branch for A, another for B, another for C, and one for Fail.",
+          "Put higher marks first so a student with 92 gets A before the code reaches B.",
+          "Only one matching branch runs in an if-else if chain."
+        ],
+        snippet: "if (marks >= 80) cout << \"A\";\nelse if (marks >= 70) cout << \"B\";\nelse if (marks >= 60) cout << \"C\";\nelse cout << \"Fail\";",
+        question: "Why is else if useful in grade systems?",
+        answer: "It lets you test several ranges in order and choose exactly one grade result."
+      },
+      {
+        page: 18,
+        title: "Accumulator logic",
+        explain: "An accumulator is a variable that keeps a running total. It is updated again and again inside a loop.",
+        examples: [
+          "Start with <code>sum = 0</code> before the loop begins.",
+          "Use <code>sum = sum + i</code> to add the current value.",
+          "You can also count items with an accumulator like <code>count++</code>."
+        ],
+        snippet: "int sum = 0;\nfor (int i = 1; i <= 5; i++) {\n    sum = sum + i;\n}\ncout << sum << endl;",
+        question: "Why must sum be initialized before the loop starts?",
+        answer: "Because the accumulator needs a known starting value. If it starts with garbage data, the result will be wrong."
+      },
+      {
+        page: 19,
+        title: "Calculating averages with loops",
+        explain: "To find an average, first add all values to get the total, then divide that total by how many values there are.",
+        examples: [
+          "Read 5 marks in a loop and add them to <code>total</code>.",
+          "Average is <code>total / 5.0</code> if you want a decimal answer.",
+          "Use a counter if the number of inputs is not fixed."
+        ],
+        snippet: "int total = 0, mark;\nfor (int i = 1; i <= 5; i++) {\n    cin >> mark;\n    total += mark;\n}\ndouble average = total / 5.0;",
+        question: "What two steps are needed to find an average in code?",
+        answer: "First calculate the total sum, then divide by the number of values."
+      },
+      {
+        page: 20,
+        title: "while, do-while, and prime checking",
+        explain: "A while loop checks its condition before running. A do-while loop runs the body once before checking. Prime checking often tests divisibility in a loop.",
+        examples: [
+          "Use <code>while</code> when the loop may run zero times.",
+          "Use <code>do-while</code> when the loop must run at least once.",
+          "A number is prime if only 1 and itself divide it exactly."
+        ],
+        snippet: "int n = 13, i = 2;\nbool prime = true;\nwhile (i < n) {\n    if (n % i == 0) {\n        prime = false;\n        break;\n    }\n    i++;\n}",
+        question: "What is one difference between while and do-while?",
+        answer: "A while loop checks first, but a do-while loop runs once before checking the condition."
+      },
+      {
+        page: 21,
+        title: "Extracting digits using %10 and /10",
+        explain: "The expression <code>n % 10</code> gives the last digit of a number, and <code>n / 10</code> removes the last digit when n is an int.",
+        examples: [
+          "From 456, <code>456 % 10</code> gives 6.",
+          "Then <code>456 / 10</code> becomes 45.",
+          "Repeat those two steps to process every digit."
+        ],
+        snippet: "int n = 456;\ncout << n % 10 << endl;\nn = n / 10;\ncout << n % 10 << endl;\nn = n / 10;\ncout << n % 10 << endl;",
+        question: "What does n % 10 give you?",
+        answer: "It gives the last digit of the integer n."
+      },
+      {
+        page: 22,
+        title: "switch statements and menu systems",
+        explain: "A switch statement is useful when one variable can match one of several exact values, such as a menu choice.",
+        examples: [
+          "Use <code>case 1</code> for Add and <code>case 2</code> for Subtract.",
+          "A <code>default</code> case handles invalid input.",
+          "Switch is cleaner than a long if-else chain when you compare one value against many exact options."
+        ],
+        snippet: "int choice;\ncin >> choice;\nswitch (choice) {\n    case 1: cout << \"Add\"; break;\n    case 2: cout << \"Subtract\"; break;\n    case 3: cout << \"Exit\"; break;\n    default: cout << \"Invalid\";\n}",
+        question: "When is switch clearer than many if-else statements?",
+        answer: "It is clearer when you are checking one variable against several exact constant values."
+      },
+      {
+        page: 23,
+        title: "Advanced switch calculations",
+        explain: "Switch can also handle operators or commands. Each case performs a different action based on the selected symbol or value.",
+        examples: [
+          "Use <code>case '+' </code> for addition and <code>case '-'</code> for subtraction.",
+          "Place <code>break</code> after each case to stop execution from falling into the next one.",
+          "Use <code>default</code> when the operator is unsupported."
+        ],
+        snippet: "char op;\nint a = 8, b = 4;\ncin >> op;\nswitch (op) {\n    case '+': cout << a + b; break;\n    case '-': cout << a - b; break;\n    case '*': cout << a * b; break;\n    case '/': cout << a / b; break;\n    default: cout << \"Invalid\";\n}",
+        question: "Why is break important inside a switch case?",
+        answer: "Without break, execution continues into the next case, which usually gives the wrong result."
+      },
+      {
+        page: 24,
+        title: "Armstrong number logic",
+        explain: "An Armstrong number equals the sum of its digits each raised to a power. For 153, the sum of the cubes of its digits is 153.",
+        examples: [
+          "Digits of 153 are 1, 5, and 3.",
+          "Compute <code>1^3 + 5^3 + 3^3</code> and compare with the original number.",
+          "Use <code>% 10</code> and <code>/ 10</code> to process each digit."
+        ],
+        snippet: "int n = 153, temp = n, sum = 0;\nwhile (temp > 0) {\n    int d = temp % 10;\n    sum += d * d * d;\n    temp /= 10;\n}\ncout << (sum == n);",
+        question: "What must you do with each digit to test an Armstrong number?",
+        answer: "Take each digit, raise it to the required power, add the results, and compare the sum with the original number."
+      },
+      {
+        page: 25,
+        title: "Time conversion from seconds",
+        explain: "Time conversion uses division to get larger units and modulo to get what remains.",
+        examples: [
+          "Hours are <code>seconds / 3600</code>.",
+          "Minutes are <code>(seconds % 3600) / 60</code>.",
+          "Seconds left over are <code>seconds % 60</code>."
+        ],
+        snippet: "int total = 3665;\nint hours = total / 3600;\nint minutes = (total % 3600) / 60;\nint seconds = total % 60;",
+        question: "Which operators help split total seconds into parts?",
+        answer: "Division and modulo are the main operators used to split seconds into hours, minutes, and seconds."
+      },
+      {
+        page: 26,
+        title: "Local vs global variable scope",
+        explain: "A global variable can be used in many parts of a program, while a local variable can be used only inside the block or function where it is declared.",
+        examples: [
+          "A variable declared outside all functions is global.",
+          "A variable declared inside <code>main()</code> is local to <code>main()</code>.",
+          "Two variables can have the same name in different scopes, but that can confuse beginners."
+        ],
+        snippet: "int globalVar = 100;\n\nint main() {\n    int localVar = 50;\n    cout << globalVar << endl;\n    cout << localVar << endl;\n}",
+        question: "Which variable can be used only inside its function?",
+        answer: "A local variable can be used only inside the function or block where it is declared."
+      },
+      {
+        page: 27,
+        title: "Nested conditions and logical tracing",
+        explain: "A nested if is an if statement placed inside another if statement. It is useful when one test should happen only after another test succeeds.",
+        examples: [
+          "First check if a number is positive, then check if it is even.",
+          "Use nested if when the second condition matters only if the first one is true.",
+          "Trace one condition at a time to avoid confusion."
+        ],
+        snippet: "int n = 8;\nif (n > 0) {\n    if (n % 2 == 0) {\n        cout << \"Positive and even\" << endl;\n    }\n}",
+        question: "What is a nested if statement?",
+        answer: "It is an if statement written inside another if statement."
+      },
+      {
+        page: 28,
+        title: "Triangle type checking",
+        explain: "Triangle type depends on how many sides are equal. All equal means equilateral, two equal means isosceles, and all different means scalene.",
+        examples: [
+          "<code>5, 5, 5</code> is equilateral.",
+          "<code>5, 5, 8</code> is isosceles.",
+          "<code>4, 5, 6</code> is scalene."
+        ],
+        snippet: "if (a == b && b == c) cout << \"Equilateral\";\nelse if (a == b || b == c || a == c) cout << \"Isosceles\";\nelse cout << \"Scalene\";",
+        question: "How do you know a triangle is equilateral?",
+        answer: "A triangle is equilateral when all three sides are equal."
+      },
+      {
+        page: 29,
+        title: "Quadratic equation formula",
+        explain: "The quadratic formula solves equations of the form <code>ax^2 + bx + c = 0</code>. The discriminant tells you the kind of roots.",
+        examples: [
+          "The discriminant is <code>b*b - 4*a*c</code>.",
+          "If it is positive, the equation has two real roots.",
+          "If it is zero, the roots are equal; if negative, the roots are not real."
+        ],
+        snippet: "double a = 1, b = -5, c = 6;\ndouble d = b * b - 4 * a * c;\ndouble x1 = (-b + sqrt(d)) / (2 * a);\ndouble x2 = (-b - sqrt(d)) / (2 * a);",
+        question: "What value tells you whether roots are real or not?",
+        answer: "The discriminant, <code>b*b - 4*a*c</code>, tells you whether the roots are real."
+      },
+      {
+        page: 30,
+        title: "Ternary operator",
+        explain: "The ternary operator is a short way to write a simple if-else expression that chooses one of two results.",
+        examples: [
+          "<code>age >= 18 ? \"Adult\" : \"Minor\"</code> returns one of two strings.",
+          "It works best for short decisions.",
+          "For long logic blocks, normal if-else is usually clearer."
+        ],
+        snippet: "int age = 20;\ncout << (age >= 18 ? \"Adult\" : \"Minor\") << endl;",
+        question: "How is the ternary operator similar to if-else?",
+        answer: "Both choose between two possible results based on a condition."
+      },
+      {
+        page: 31,
+        title: "Advanced time conversion",
+        explain: "Longer time conversion is the same idea as basic conversion, but with more units such as days, hours, minutes, and seconds.",
+        examples: [
+          "Days are <code>total / 86400</code>.",
+          "After removing days, convert the remainder into hours and minutes.",
+          "Modulo keeps only the leftover part for the next step."
+        ],
+        snippet: "int total = 90061;\nint days = total / 86400;\nint hours = (total % 86400) / 3600;\nint minutes = (total % 3600) / 60;\nint seconds = total % 60;",
+        question: "Why do longer time conversions often use repeated division and modulo?",
+        answer: "Because each larger unit is taken out first, and modulo keeps the remaining part for the next smaller unit."
+      },
+      {
+        page: 32,
+        title: "Formatting output and increment behavior",
+        explain: "Formatted output makes tables easier to read. Increment behavior matters because pre-increment and post-increment do not act the same inside expressions.",
+        examples: [
+          "Use <code>setw()</code> to align columns.",
+          "Use <code>fixed</code> and <code>setprecision()</code> for decimals.",
+          "Watch carefully when <code>i++</code> is printed versus when <code>++i</code> is printed."
+        ],
+        snippet: "#include <iomanip>\nfor (int i = 1; i <= 3; i++) {\n    cout << setw(5) << i << setw(8) << i * i << endl;\n}",
+        question: "How does formatted output make results easier to read?",
+        answer: "It lines up values neatly, so columns, numbers, and labels are easier to compare."
+      },
+      {
+        page: 33,
+        title: "getline() and input buffer handling",
+        explain: "getline reads a full line, including spaces. After <code>cin</code>, a leftover newline may stay in the buffer, so getline can read that empty line by mistake.",
+        examples: [
+          "Read a number with <code>cin &gt;&gt; age;</code>.",
+          "Then clear the buffer with <code>cin.ignore()</code> before calling <code>getline</code>.",
+          "Use getline for full names or addresses with spaces."
+        ],
+        snippet: "int age;\nstring fullName;\ncin >> age;\ncin.ignore();\ngetline(cin, fullName);",
+        question: "Why can getline seem to skip input after cin?",
+        answer: "Because <code>cin</code> leaves the newline character in the input buffer, and getline reads that newline immediately."
+      },
+      {
+        page: 34,
+        title: "Mathematical series and Fibonacci logic",
+        explain: "The Fibonacci sequence builds each new term from the previous two terms. This is a common practice problem for loops and variable updates.",
+        examples: [
+          "The sequence starts <code>0, 1, 1, 2, 3, 5</code>.",
+          "Each new term is the sum of the last two terms.",
+          "Series problems often need temporary variables to avoid losing old values."
+        ],
+        snippet: "int a = 0, b = 1;\nfor (int i = 0; i < 8; i++) {\n    cout << a << \" \";\n    int next = a + b;\n    a = b;\n    b = next;\n}",
+        question: "In Fibonacci, how is each new term created?",
+        answer: "Each new term is created by adding the previous two terms."
+      },
+      {
+        page: 35,
+        title: "continue vs break",
+        explain: "Both statements change loop flow. <code>continue</code> skips the rest of the current loop turn, while <code>break</code> ends the loop completely.",
+        examples: [
+          "Use <code>continue</code> to skip printing the value 5.",
+          "Use <code>break</code> to stop the loop when the value reaches 8.",
+          "These statements are useful, but too many can make logic harder to follow."
+        ],
+        snippet: "for (int i = 1; i <= 10; i++) {\n    if (i == 5) continue;\n    if (i == 8) break;\n    cout << i << \" \";\n}",
+        question: "What is the difference between continue and break?",
+        answer: "continue skips to the next loop iteration, but break exits the loop entirely."
+      },
+      {
+        page: 36,
+        title: "goto statements and labels",
+        explain: "goto jumps directly to a labeled statement. It works, but it can make code difficult to read and debug, so it is usually avoided in modern C++.",
+        examples: [
+          "A label ends with a colon, such as <code>start:</code>.",
+          "<code>goto start;</code> jumps back to that label.",
+          "Loops and functions are usually better than goto."
+        ],
+        snippet: "int count = 0;\nstart:\ncout << count << endl;\ncount++;\nif (count < 2) goto start;",
+        question: "Why is goto usually avoided in modern code?",
+        answer: "Because it can create confusing control flow that is harder to read, test, and maintain."
+      },
+      {
+        page: 37,
+        title: "Complex tracing with loops and jumps",
+        explain: "When tracing more complex code, focus on loop counters, condition results, and any statement that changes program flow such as break or continue.",
+        examples: [
+          "Track the loop variable on every iteration.",
+          "Write down when a condition becomes true or false.",
+          "Note exactly when the loop stops or skips output."
+        ],
+        snippet: "for (int i = 1; i <= 6; i++) {\n    if (i == 2) continue;\n    if (i == 5) break;\n    cout << i << \" \";\n}",
+        question: "What should you track when tracing a loop by hand?",
+        answer: "Track the loop variable, changed variables, condition results, and what gets printed or skipped on each iteration."
+      },
+      {
+        page: 38,
+        title: "Functions and return values",
+        explain: "A function groups code into a reusable unit. A returning function sends a result back to the place where it was called.",
+        examples: [
+          "Use a function like <code>add(a, b)</code> to reuse the same logic.",
+          "The <code>return</code> statement sends one result back.",
+          "Functions help split a program into smaller, clearer pieces."
+        ],
+        snippet: "int add(int a, int b) {\n    return a + b;\n}\n\ncout << add(4, 6) << endl;",
+        question: "What does return send back to the caller?",
+        answer: "It sends the function's result back to the place where the function was called."
+      },
+      {
+        page: 39,
+        title: "void vs returning functions",
+        explain: "A void function performs an action but does not send back a value. A returning function computes a value and returns it.",
+        examples: [
+          "Use <code>void showMenu()</code> when the job is just to display text.",
+          "Use <code>int square(int n)</code> when the caller needs a result.",
+          "Pick void when there is nothing meaningful to send back."
+        ],
+        snippet: "void greet() {\n    cout << \"Hello\" << endl;\n}\n\nint square(int n) {\n    return n * n;\n}",
+        question: "When would you choose a void function?",
+        answer: "Choose a void function when the function should do something, like print or update, but does not need to return a value."
+      },
+      {
+        page: 40,
+        title: "Function prototypes and parameter passing",
+        explain: "A function prototype tells the compiler a function exists before its full definition appears. Parameters let you pass data into the function.",
+        examples: [
+          "Place the prototype before <code>main()</code> if the function body comes later.",
+          "Parameters act like input variables for the function.",
+          "The compiler uses prototypes to check calls early."
+        ],
+        snippet: "int add(int a, int b);\n\nint main() {\n    cout << add(2, 3);\n}\n\nint add(int a, int b) {\n    return a + b;\n}",
+        question: "Why are function prototypes useful?",
+        answer: "They let the compiler know the function's name, return type, and parameters before the function is used."
+      },
+      {
+        page: 41,
+        title: "Call by value vs call by reference",
+        explain: "Call by value sends a copy, so the original variable stays unchanged. Call by reference sends direct access, so the original variable can be changed.",
+        examples: [
+          "<code>void f(int x)</code> changes only the copy.",
+          "<code>void f(int &amp;x)</code> can change the real variable.",
+          "Use reference when the function should update the caller's data."
+        ],
+        snippet: "void byValue(int x) { x = 20; }\nvoid byRef(int &x) { x = 20; }",
+        question: "Which method can change the original variable?",
+        answer: "Call by reference can change the original variable."
+      },
+      {
+        page: 42,
+        title: "One-dimensional arrays",
+        explain: "An array stores several values of the same type under one name. Each value is stored at an index starting from 0.",
+        examples: [
+          "<code>marks[0]</code> is the first value.",
+          "Use a loop to print or read all elements.",
+          "Arrays are useful when values belong to one group, like test scores."
+        ],
+        snippet: "int marks[5] = {70, 80, 60, 90, 75};\nfor (int i = 0; i < 5; i++) {\n    cout << marks[i] << endl;\n}",
+        question: "Why is an array useful when values are related?",
+        answer: "Because it stores many same-type values together, which makes processing them with loops much easier."
+      },
+      {
+        page: 43,
+        title: "Array operations",
+        explain: "Common array tasks include finding the sum, average, maximum, and minimum. These tasks usually use loops and helper variables.",
+        examples: [
+          "Use <code>sum += arr[i]</code> to total all values.",
+          "Start <code>maxVal</code> with the first element before comparing others.",
+          "Average is total divided by the number of elements."
+        ],
+        snippet: "int arr[5] = {4, 7, 2, 9, 5};\nint sum = 0, maxVal = arr[0];\nfor (int i = 0; i < 5; i++) {\n    sum += arr[i];\n    if (arr[i] > maxVal) maxVal = arr[i];\n}",
+        question: "What extra variable do you need to track the maximum value?",
+        answer: "You need a variable such as <code>maxVal</code> to remember the largest value seen so far."
+      },
+      {
+        page: 44,
+        title: "Searching inside arrays",
+        explain: "Searching means checking whether a value exists in the array and often finding its position.",
+        examples: [
+          "Linear search checks each element one by one.",
+          "Store the index if you find the target value.",
+          "If nothing matches, report that the value was not found."
+        ],
+        snippet: "int arr[5] = {3, 7, 12, 18, 20};\nint pos = -1;\nfor (int i = 0; i < 5; i++) {\n    if (arr[i] == 12) {\n        pos = i;\n        break;\n    }\n}",
+        question: "What should the program do if the value is not found?",
+        answer: "It should clearly report that the value does not exist in the array, often using a marker like <code>-1</code>."
+      },
+      {
+        page: 45,
+        title: "Bubble sort algorithm",
+        explain: "Bubble sort repeatedly compares neighboring values and swaps them if they are in the wrong order.",
+        examples: [
+          "Larger values move toward the end after each pass.",
+          "If two neighbors are out of order, swap them.",
+          "Bubble sort is easy to learn, even though it is not very fast for large data."
+        ],
+        snippet: "for (int pass = 0; pass < 4; pass++) {\n    for (int i = 0; i < 4 - pass; i++) {\n        if (arr[i] > arr[i + 1]) {\n            swap(arr[i], arr[i + 1]);\n        }\n    }\n}",
+        question: "What happens when two neighboring values are in the wrong order?",
+        answer: "They are swapped so the smaller one moves left and the larger one moves right."
+      },
+      {
+        page: 46,
+        title: "Two-dimensional arrays",
+        explain: "A 2D array stores data in rows and columns, like a table or matrix.",
+        examples: [
+          "A class mark sheet can be stored as rows for students and columns for subjects.",
+          "Use two loops to read or print a 2D array.",
+          "Access elements with two indexes such as <code>arr[row][col]</code>."
+        ],
+        snippet: "int marks[3][2] = {{70, 80}, {65, 75}, {90, 88}};\ncout << marks[1][0] << endl;",
+        question: "How do rows and columns work in a 2D array?",
+        answer: "The first index selects the row, and the second index selects the column within that row."
+      },
+      {
+        page: 47,
+        title: "Matrix calculations and diagonals",
+        explain: "Matrix problems often involve adding matching positions or reading special positions like diagonals.",
+        examples: [
+          "To add matrices, add each <code>[row][col]</code> position with the same position in the other matrix.",
+          "The main diagonal uses positions where row and column indexes are equal.",
+          "In a 2x2 matrix, the main diagonal is <code>[0][0]</code> and <code>[1][1]</code>."
+        ],
+        snippet: "int a[2][2] = {{1, 2}, {3, 4}};\nint b[2][2] = {{5, 6}, {7, 8}};\nint c[2][2];",
+        question: "Which positions belong to the main diagonal?",
+        answer: "The positions where the row index and column index are the same, such as <code>[0][0]</code>, <code>[1][1]</code>, and <code>[2][2]</code>."
+      },
+      {
+        page: 48,
+        title: "Structures",
+        explain: "A struct groups related variables of possibly different types into one unit.",
+        examples: [
+          "A Student struct can hold name, roll number, and marks together.",
+          "Structs make related data easier to manage than many separate variables.",
+          "Use dot notation like <code>s.name</code> to access members."
+        ],
+        snippet: "struct Student {\n    string name;\n    int roll;\n    float marks;\n};",
+        question: "Why is a struct useful compared to separate variables?",
+        answer: "It keeps related information together under one name, which makes programs more organized."
+      },
+      {
+        page: 49,
+        title: "Arrays of structures",
+        explain: "An array of structs stores many records of the same kind, such as a list of students or employees.",
+        examples: [
+          "Use <code>students[0].name</code> for the first student's name.",
+          "Combine loops with arrays of structs to print all records.",
+          "This pattern is common in beginner projects like student record systems."
+        ],
+        snippet: "Student students[3];\nstudents[0].name = \"Ali\";\nstudents[1].name = \"Sara\";\nstudents[2].name = \"Hamza\";",
+        question: "Why combine arrays with structs?",
+        answer: "Because you often need many records, and each record has several related fields."
+      },
+      {
+        page: 50,
+        title: "Pointer basics",
+        explain: "A pointer stores the address of another variable. The <code>&amp;</code> operator gets an address, and the <code>*</code> operator accesses the value at that address.",
+        examples: [
+          "<code>p = &amp;x</code> stores the address of x.",
+          "<code>*p</code> reads or changes the value pointed to by p.",
+          "Pointers are the base for dynamic memory and some advanced data structures."
+        ],
+        snippet: "int x = 10;\nint *p = &x;\ncout << *p << endl;",
+        question: "What is the difference between * and & in pointer use?",
+        answer: "<code>&amp;</code> gives an address, while <code>*</code> is used to declare a pointer or access the value stored at an address."
+      },
+      {
+        page: 51,
+        title: "Pointer arithmetic",
+        explain: "Pointer arithmetic moves through memory by elements, not by raw bytes in normal source code use.",
+        examples: [
+          "If <code>p</code> points to an int array element, <code>p + 1</code> points to the next int.",
+          "The compiler automatically accounts for the element size.",
+          "Pointer arithmetic is common when walking through arrays."
+        ],
+        snippet: "int arr[3] = {10, 20, 30};\nint *p = arr;\ncout << *p << endl;\ncout << *(p + 1) << endl;",
+        question: "Why does p + 1 move to the next element and not just one byte every time?",
+        answer: "Because C++ adjusts the pointer by the size of the pointed-to type, so an int pointer moves by one int element."
+      },
+      {
+        page: 52,
+        title: "File handling with fstream",
+        explain: "File handling lets programs save or read data from files. The <code>&lt;fstream&gt;</code> header provides streams for file input and output.",
+        examples: [
+          "Use <code>ofstream</code> to write to a file.",
+          "Use <code>ifstream</code> to read from a file.",
+          "Always check whether the file opened successfully."
+        ],
+        snippet: "#include <fstream>\nofstream outFile(\"names.txt\");\noutFile << \"Ali\\nSara\\nHamza\";",
+        question: "Which header is needed for file handling?",
+        answer: "The <code>&lt;fstream&gt;</code> header is needed for basic file handling."
+      },
+      {
+        page: 53,
+        title: "Reading and writing files in loops",
+        explain: "Loops are common in file processing because files often contain repeated records or many values.",
+        examples: [
+          "Read one number at a time until the file ends.",
+          "Add all values to a running total.",
+          "Write many lines to a file inside a loop."
+        ],
+        snippet: "int value, total = 0;\nifstream inFile(\"nums.txt\");\nwhile (inFile >> value) {\n    total += value;\n}",
+        question: "Why are loops common in file processing?",
+        answer: "Because file data usually contains many items, and loops let you process those items one by one."
+      },
+      {
+        page: 54,
+        title: "Recursion and factorial",
+        explain: "Recursion means a function calls itself. Factorial is a classic example because each result depends on a smaller version of the same problem.",
+        examples: [
+          "<code>5! = 5 * 4 * 3 * 2 * 1</code>.",
+          "The recursive rule is <code>fact(n) = n * fact(n - 1)</code>.",
+          "Every recursive function needs a base case to stop."
+        ],
+        snippet: "int fact(int n) {\n    if (n == 0 || n == 1) return 1;\n    return n * fact(n - 1);\n}",
+        question: "What is the base case in a recursive factorial function?",
+        answer: "The base case is when n is 0 or 1, because factorial is 1 there and recursion should stop."
+      },
+      {
+        page: 55,
+        title: "Introduction to classes and OOP",
+        explain: "A class is a blueprint, and an object is a real instance made from that blueprint. Classes combine data and functions that belong together.",
+        examples: [
+          "A <code>Car</code> class can store brand and speed.",
+          "An object like <code>myCar</code> is one car made from the class.",
+          "OOP helps model real-world entities more clearly."
+        ],
+        snippet: "class Car {\npublic:\n    string brand;\n    int speed;\n};",
+        question: "What is the difference between a class and an object?",
+        answer: "A class is the design or blueprint, while an object is a real instance created from that class."
+      },
+      {
+        page: 56,
+        title: "Constructors and object creation",
+        explain: "A constructor is a special function that runs automatically when an object is created. It is used to initialize the object's data.",
+        examples: [
+          "Constructors have the same name as the class.",
+          "They do not have a return type.",
+          "A constructor can set default or provided values for members."
+        ],
+        snippet: "class Student {\npublic:\n    string name;\n    int marks;\n    Student(string n, int m) {\n        name = n;\n        marks = m;\n    }\n};",
+        question: "When does a constructor run?",
+        answer: "A constructor runs automatically when an object of the class is created."
+      },
+      {
+        page: 57,
+        title: "Function and operator overloading",
+        explain: "Overloading means using the same name for different versions, as long as the parameter lists are different. This lets similar actions share one name.",
+        examples: [
+          "You can overload <code>add(int, int)</code> and <code>add(float, float)</code>.",
+          "The compiler chooses the best match based on argument types.",
+          "Operator overloading lets classes act more naturally with operators like <code>+</code>."
+        ],
+        snippet: "int add(int a, int b) { return a + b; }\nfloat add(float a, float b) { return a + b; }",
+        question: "What makes overloaded functions different from each other?",
+        answer: "They must differ in their parameter list, such as number of parameters or parameter types."
+      },
+      {
+        page: 58,
+        title: "Static class members",
+        explain: "A static member belongs to the class itself instead of to each object. All objects share the same static member.",
+        examples: [
+          "Use a static counter to track how many objects have been created.",
+          "Change the value through any object, and the same shared value changes for all.",
+          "Static members are good for class-wide information."
+        ],
+        snippet: "class Counter {\npublic:\n    static int count;\n    Counter() { count++; }\n};\nint Counter::count = 0;",
+        question: "Why is a static member shared by all objects?",
+        answer: "Because it belongs to the class itself, so there is only one shared copy for all objects."
+      },
+      {
+        page: 59,
+        title: "Friend functions",
+        explain: "A friend function is allowed to access private members of a class even though it is not a member function of that class.",
+        examples: [
+          "Friend functions can be useful when an outside function needs special access.",
+          "They should be used carefully because they reduce encapsulation.",
+          "A friend function is declared inside the class with the keyword <code>friend</code>."
+        ],
+        snippet: "class Box {\nprivate:\n    int value;\npublic:\n    Box() : value(10) {}\n    friend void show(Box b);\n};",
+        question: "Why should friend functions be used carefully?",
+        answer: "Because they can access private data directly, which weakens the normal protection provided by the class."
+      },
+      {
+        page: 60,
+        title: "Single inheritance",
+        explain: "Inheritance lets one class reuse data and behavior from another. In single inheritance, one derived class inherits from one base class.",
+        examples: [
+          "A <code>Student</code> class can inherit basic details from a <code>Person</code> class.",
+          "The derived class can add its own members too.",
+          "Inheritance helps avoid repeated code."
+        ],
+        snippet: "class Person { public: string name; };\nclass Student : public Person { public: int roll; };",
+        question: "What does the derived class get from the base class?",
+        answer: "The derived class gets the accessible data members and member functions of the base class."
+      },
+      {
+        page: 61,
+        title: "Multiple inheritance",
+        explain: "Multiple inheritance means one class inherits from more than one base class. It can be powerful, but it can also create ambiguity.",
+        examples: [
+          "A class can inherit from both <code>Teacher</code> and <code>Writer</code>.",
+          "If both base classes have a member with the same name, the derived class may need qualification.",
+          "Use multiple inheritance carefully to keep designs simple."
+        ],
+        snippet: "class Teacher { public: void teach() {} };\nclass Writer { public: void write() {} };\nclass Person : public Teacher, public Writer {};",
+        question: "What is one challenge of multiple inheritance?",
+        answer: "One challenge is ambiguity when two base classes provide members with the same name."
+      },
+      {
+        page: 62,
+        title: "Function overriding",
+        explain: "Overriding happens when a derived class provides its own version of a function that already exists in the base class.",
+        examples: [
+          "The function name and parameter list should match.",
+          "Overriding lets a derived class change inherited behavior.",
+          "It is often used with virtual functions."
+        ],
+        snippet: "class Base { public: void display() { cout << \"Base\"; } };\nclass Derived : public Base { public: void display() { cout << \"Derived\"; } };",
+        question: "What is the purpose of overriding?",
+        answer: "Its purpose is to let a derived class replace inherited behavior with behavior that fits that derived type better."
+      },
+      {
+        page: 63,
+        title: "Virtual functions and polymorphism",
+        explain: "A virtual function lets C++ choose the correct overridden function at runtime through a base class pointer or reference.",
+        examples: [
+          "Without <code>virtual</code>, the base version may run even when the object is derived.",
+          "With <code>virtual</code>, a base pointer can call the derived version.",
+          "This is runtime polymorphism."
+        ],
+        snippet: "class Base { public: virtual void show() { cout << \"Base\"; } };\nclass Derived : public Base { public: void show() override { cout << \"Derived\"; } };",
+        question: "Why is virtual needed for runtime polymorphism?",
+        answer: "Because it tells C++ to decide at runtime which overridden function matches the actual object type."
+      },
+      {
+        page: 64,
+        title: "Pure virtual functions and abstract classes",
+        explain: "A pure virtual function has no base implementation and forces derived classes to provide one. A class with at least one pure virtual function is abstract.",
+        examples: [
+          "Write <code>virtual double area() = 0;</code> in a Shape class.",
+          "Abstract classes are used as common interfaces.",
+          "Derived classes must implement the pure virtual function to create objects."
+        ],
+        snippet: "class Shape {\npublic:\n    virtual double area() = 0;\n};",
+        question: "Can you create an object of an abstract class directly?",
+        answer: "No. You cannot create an object directly from an abstract class."
+      },
+      {
+        page: 65,
+        title: "Virtual destructors",
+        explain: "A virtual destructor makes sure the correct destructor chain runs when deleting a derived object through a base class pointer.",
+        examples: [
+          "This matters when derived classes manage memory or files.",
+          "Without a virtual destructor, cleanup may be incomplete.",
+          "Base classes intended for inheritance should often have virtual destructors."
+        ],
+        snippet: "class Base {\npublic:\n    virtual ~Base() {}\n};",
+        question: "Why should base classes often have virtual destructors?",
+        answer: "So deleting through a base pointer correctly calls the derived destructor too, preventing incomplete cleanup."
+      },
+      {
+        page: 66,
+        title: "this pointer",
+        explain: "Inside a member function, <code>this</code> points to the current object. It is useful when member names and parameter names are the same.",
+        examples: [
+          "Use <code>this-&gt;name = name;</code> inside a constructor.",
+          "The pointer always refers to the object that called the function.",
+          "You rarely write it unless it improves clarity."
+        ],
+        snippet: "class Student {\npublic:\n    string name;\n    Student(string name) {\n        this->name = name;\n    }\n};",
+        question: "What does this point to inside a member function?",
+        answer: "It points to the current object that is using that member function."
+      },
+      {
+        page: 67,
+        title: "Exception handling",
+        explain: "Exceptions provide a way to handle errors without mixing all error logic into normal program flow. <code>try</code> marks risky code, <code>throw</code> sends an error, and <code>catch</code> handles it.",
+        examples: [
+          "Throw an error if the user tries to divide by zero.",
+          "Catch the exception and show a friendly message.",
+          "Exceptions separate normal logic from error handling logic."
+        ],
+        snippet: "try {\n    if (b == 0) throw \"Division by zero\";\n    cout << a / b;\n} catch (const char* msg) {\n    cout << msg;\n}",
+        question: "What is the role of catch in exception handling?",
+        answer: "catch receives and handles the thrown error so the program can respond properly."
+      },
+      {
+        page: 68,
+        title: "Templates and generic programming",
+        explain: "Templates let one function or class work with many data types, which reduces repeated code.",
+        examples: [
+          "A max function can work for ints, doubles, and chars using one template.",
+          "The compiler creates the needed version based on the type used.",
+          "Templates are useful when the logic is the same but the type changes."
+        ],
+        snippet: "template <typename T>\nT bigger(T a, T b) {\n    return (a > b) ? a : b;\n}",
+        question: "How do templates reduce repeated code?",
+        answer: "They let you write the logic once and reuse it with different data types."
+      },
+      {
+        page: 69,
+        title: "Linked lists",
+        explain: "A linked list stores values in nodes, and each node points to the next one. Unlike arrays, linked list elements are not stored next to each other in memory.",
+        examples: [
+          "Each node usually stores data and a next pointer.",
+          "Insertion can be easier than in arrays because elements do not need shifting.",
+          "Traversal starts at the head and follows next pointers until null."
+        ],
+        snippet: "struct Node {\n    int data;\n    Node* next;\n};",
+        question: "How is a linked list different from an array?",
+        answer: "An array stores elements in contiguous memory with fixed indexing, while a linked list stores separate nodes connected by pointers."
+      },
+      {
+        page: 70,
+        title: "Stack and queue concepts",
+        explain: "A stack follows LIFO, and a queue follows FIFO. These are common ways to organize data based on removal order.",
+        examples: [
+          "A stack removes the last pushed item first.",
+          "A queue removes the earliest inserted item first.",
+          "A pile of plates is like a stack, and a line of people is like a queue."
+        ],
+        snippet: "// Stack: push 1, 2, 3 then pop gives 3 first\n// Queue: enqueue 1, 2, 3 then dequeue gives 1 first",
+        question: "What do LIFO and FIFO mean?",
+        answer: "LIFO means Last In, First Out. FIFO means First In, First Out."
+      },
+      {
+        page: 71,
+        title: "Binary search trees",
+        explain: "A binary search tree stores smaller values on the left and larger values on the right. This structure helps searching and insertion.",
+        examples: [
+          "If the root is 50, then 30 goes left and 70 goes right.",
+          "Each subtree follows the same rule.",
+          "BSTs are useful for ordered data."
+        ],
+        snippet: "// Insert 50, then 30 to the left, then 70 to the right",
+        question: "Where does a smaller value go in a BST?",
+        answer: "A smaller value goes into the left side of the tree."
+      },
+      {
+        page: 72,
+        title: "STL containers",
+        explain: "The Standard Template Library includes ready-made containers such as vector, list, and map. They save time compared with building data structures from scratch.",
+        examples: [
+          "Use <code>vector</code> for a dynamic array.",
+          "Use <code>list</code> for linked-list style insertion and removal.",
+          "Use <code>map</code> for key-value pairs."
+        ],
+        snippet: "vector<int> nums = {1, 2, 3};\nlist<string> names = {\"Ali\", \"Sara\"};\nmap<string, int> scores;",
+        question: "Why might you choose a vector over a normal array?",
+        answer: "Because a vector can grow and shrink dynamically and also provides useful built-in functions."
+      },
+      {
+        page: 73,
+        title: "Dynamic memory with new and delete",
+        explain: "Dynamic memory is created while the program runs. You allocate it with <code>new</code> and release it with <code>delete</code>.",
+        examples: [
+          "<code>int* p = new int;</code> creates an int in dynamic memory.",
+          "Use <code>delete p;</code> when finished.",
+          "For arrays created with <code>new[]</code>, use <code>delete[]</code>."
+        ],
+        snippet: "int* p = new int;\n*p = 25;\ncout << *p << endl;\ndelete p;",
+        question: "What can happen if you forget to delete dynamic memory?",
+        answer: "The program can leak memory, which wastes resources and can cause problems in long-running programs."
+      },
+      {
+        page: 74,
+        title: "Advanced file streams and binary files",
+        explain: "Binary files store raw bytes, while text files store readable characters. Binary files are often smaller and better for direct record storage.",
+        examples: [
+          "A struct can be written directly to a binary file with <code>write()</code>.",
+          "Binary files are not meant to be read as normal text.",
+          "Use binary mode when exact byte layout matters."
+        ],
+        snippet: "fstream file(\"data.bin\", ios::out | ios::binary);\nfile.write(reinterpret_cast<char*>(&s), sizeof(s));",
+        question: "How is a binary file different from a text file?",
+        answer: "A binary file stores raw byte data, while a text file stores readable characters and lines."
+      },
+      {
+        page: 75,
+        title: "Random access file handling",
+        explain: "Random access means jumping directly to a specific position in a file instead of reading everything from the start.",
+        examples: [
+          "Use <code>seekg</code> to move the read pointer.",
+          "Jump to the third record by moving <code>2 * sizeof(record)</code> bytes.",
+          "This is efficient when you know exactly where the needed record is."
+        ],
+        snippet: "file.seekg(2 * sizeof(Student), ios::beg);\nfile.read(reinterpret_cast<char*>(&s), sizeof(s));",
+        question: "Why is random access faster for some tasks?",
+        answer: "Because it can jump straight to the needed record instead of reading all earlier data first."
+      },
+      {
+        page: 76,
+        title: "Tree traversal algorithms",
+        explain: "Traversal means visiting every node in a tree in a chosen order. Inorder, preorder, and postorder are common traversal patterns.",
+        examples: [
+          "Inorder visits left subtree, node, then right subtree.",
+          "Preorder visits node first.",
+          "Traversal order affects the output sequence."
+        ],
+        snippet: "void inorder(Node* root) {\n    if (!root) return;\n    inorder(root->left);\n    cout << root->data << \" \";\n    inorder(root->right);\n}",
+        question: "In inorder traversal of a BST, what kind of output order do you get?",
+        answer: "You get the values in sorted ascending order."
+      },
+      {
+        page: 77,
+        title: "Graph representation basics",
+        explain: "A graph stores nodes and the connections between them. An adjacency matrix is one way to represent which nodes are connected.",
+        examples: [
+          "Cities can be nodes and roads can be edges.",
+          "A 1 in the matrix can mean two nodes are connected.",
+          "Graphs are useful for paths, networks, and relationships."
+        ],
+        snippet: "int graph[4][4] = {\n    {0,1,1,0},\n    {1,0,0,1},\n    {1,0,0,1},\n    {0,1,1,0}\n};",
+        question: "What does an edge mean in a graph?",
+        answer: "An edge means there is a connection or relationship between two nodes."
+      },
+      {
+        page: 78,
+        title: "Bitwise operators",
+        explain: "Bitwise operators work on individual bits of numbers, while logical operators work on true or false conditions.",
+        examples: [
+          "<code>5 &amp; 3</code> compares their bits using AND.",
+          "<code>5 | 3</code> combines bits using OR.",
+          "These operators are useful for masks and low-level operations."
+        ],
+        snippet: "cout << (5 & 3) << endl;\ncout << (5 | 3) << endl;",
+        question: "How are bitwise operators different from logical operators?",
+        answer: "Bitwise operators work on the bits inside numbers, while logical operators work on true or false conditions."
+      },
+      {
+        page: 79,
+        title: "Macros and preprocessors",
+        explain: "The preprocessor runs before compilation and handles directives like <code>#include</code> and <code>#define</code>.",
+        examples: [
+          "<code>#define PI 3.14159</code> replaces PI before compilation.",
+          "The preprocessor also includes header file contents.",
+          "Macros are simple text substitution, not true typed variables or functions."
+        ],
+        snippet: "#define PI 3.14159\ndouble area = PI * r * r;",
+        question: "What happens before compilation when the preprocessor runs?",
+        answer: "It processes directives such as includes, macros, and conditional compilation before the compiler sees the code."
+      },
+      {
+        page: 80,
+        title: "Multi-file projects and header guards",
+        explain: "Larger programs are split into multiple files. Header guards prevent the same header from being included more than once in one compilation unit.",
+        examples: [
+          "Put declarations in a header and definitions in a .cpp file.",
+          "Use <code>#ifndef</code>, <code>#define</code>, and <code>#endif</code> in headers.",
+          "Header guards avoid duplicate definition errors."
+        ],
+        snippet: "#ifndef MYHEADER_H\n#define MYHEADER_H\nint add(int a, int b);\n#endif",
+        question: "Why are header guards needed?",
+        answer: "They prevent the same header from being processed multiple times, which avoids redefinition problems."
+      },
+      {
+        page: 81,
+        title: "Function templates",
+        explain: "A function template lets the same function logic work for different types.",
+        examples: [
+          "A swap template can work for ints, chars, or doubles.",
+          "The code structure stays the same, only the type changes.",
+          "Templates reduce repeated versions of the same function."
+        ],
+        snippet: "template <typename T>\nvoid swapValues(T &a, T &b) {\n    T temp = a;\n    a = b;\n    b = temp;\n}",
+        question: "What part stays the same when a function template is reused?",
+        answer: "The logic and structure stay the same; only the data type changes."
+      },
+      {
+        page: 82,
+        title: "Class templates",
+        explain: "A class template lets one class design work with different data types.",
+        examples: [
+          "A <code>Box&lt;int&gt;</code> can store an int, while <code>Box&lt;string&gt;</code> stores text.",
+          "The same class logic is reused for many types.",
+          "This is useful for generic containers and helpers."
+        ],
+        snippet: "template <typename T>\nclass Box {\npublic:\n    T value;\n};",
+        question: "Why is a class template useful?",
+        answer: "It lets one class design work with different data types without rewriting the class for each type."
+      },
+      {
+        page: 83,
+        title: "Linked list traversal",
+        explain: "Traversal in a linked list means starting at the head and moving through each node until there are no more nodes.",
+        examples: [
+          "Visit the current node, then move to <code>next</code>.",
+          "Stop when the pointer becomes <code>nullptr</code>.",
+          "Traversal is used for printing, searching, and counting nodes."
+        ],
+        snippet: "Node* current = head;\nwhile (current != nullptr) {\n    cout << current->data << endl;\n    current = current->next;\n}",
+        question: "When should traversal stop in a linked list?",
+        answer: "Traversal should stop when the current pointer becomes <code>nullptr</code>."
+      },
+      {
+        page: 84,
+        title: "Stack implementation",
+        explain: "A stack can be implemented with an array and a top index that points to the current last item.",
+        examples: [
+          "Push increases top and stores the new value.",
+          "Pop returns the top item and decreases top.",
+          "The stack is empty when top is at its starting empty value, often <code>-1</code>."
+        ],
+        snippet: "int stack[5], top = -1;\n// push: stack[++top] = value;\n// pop: value = stack[top--];",
+        question: "What condition means the stack is empty?",
+        answer: "The stack is empty when the top index shows that no elements are stored, often <code>top == -1</code>."
+      },
+      {
+        page: 85,
+        title: "Queue implementation",
+        explain: "A queue can be implemented with front and rear positions. New items are added at the rear and removed from the front.",
+        examples: [
+          "Enqueue adds an item to the rear.",
+          "Dequeue removes an item from the front.",
+          "Queues follow FIFO order."
+        ],
+        snippet: "int queue[5], front = 0, rear = -1;\n// enqueue: queue[++rear] = value;\n// dequeue: value = queue[front++];",
+        question: "Which operation adds a new item to a queue?",
+        answer: "The enqueue operation adds a new item to a queue."
+      },
+      {
+        page: 86,
+        title: "Binary search tree insertion and search",
+        explain: "Insertion and search in a BST use the same rule: go left for smaller values and right for larger values.",
+        examples: [
+          "To search for 20, compare it with the current node and move left or right.",
+          "A BST can skip large parts of the tree during search.",
+          "This property is what makes BST search efficient when the tree is balanced."
+        ],
+        snippet: "// If target < node->data, go left; if target > node->data, go right",
+        question: "How does the BST property help searching?",
+        answer: "It tells you exactly which side cannot contain the target, so you can ignore half the choices at each step."
+      },
+      {
+        page: 87,
+        title: "Conditional compilation directives",
+        explain: "Conditional compilation lets parts of the code be included or skipped based on preprocessor conditions.",
+        examples: [
+          "Use <code>#ifdef DEBUG</code> to print extra debug output only in debug builds.",
+          "Use <code>#ifndef</code> to compile code only when a name is not defined.",
+          "This is useful for debugging, platform-specific code, and configuration."
+        ],
+        snippet: "#ifdef DEBUG\ncout << \"Debug mode\" << endl;\n#endif",
+        question: "When would conditional compilation be useful?",
+        answer: "It is useful when some code should be included only in certain builds, systems, or debug modes."
+      },
+      {
+        page: 88,
+        title: "Advanced bitwise logic",
+        explain: "Bit shifts move bits left or right. A left shift by 1 often doubles a positive integer, while a right shift by 1 often halves it.",
+        examples: [
+          "<code>5 &lt;&lt; 1</code> usually becomes 10.",
+          "<code>8 &gt;&gt; 1</code> usually becomes 4.",
+          "Shifts are fast low-level operations but should be used carefully."
+        ],
+        snippet: "cout << (5 << 1) << endl;\ncout << (8 >> 1) << endl;",
+        question: "What does x << 1 usually do to a number?",
+        answer: "It usually multiplies the number by 2 by shifting all bits one place to the left."
+      },
+      {
+        page: 89,
+        title: "Character arrays vs string",
+        explain: "Both can store text, but <code>string</code> is easier and safer for beginners than character arrays.",
+        examples: [
+          "<code>string word = \"cat\";</code> is simple to use.",
+          "<code>char word[] = \"cat\";</code> is the older C-style form.",
+          "Strings come with helpful operations like length, concatenation, and comparison."
+        ],
+        snippet: "string a = \"cat\";\nchar b[] = \"cat\";\ncout << a << endl;\ncout << b << endl;",
+        question: "Which one is usually easier for beginners to use?",
+        answer: "The C++ string type is usually easier for beginners to use."
+      },
+      {
+        page: 90,
+        title: "Final tracing and review exercises",
+        explain: "Review tracing combines multiple concepts at once, such as loops, arrays, and conditions. This is a strong way to test understanding.",
+        examples: [
+          "Trace the loop index and array values together.",
+          "Mark when an if condition changes the path.",
+          "Check your trace against actual program output."
+        ],
+        snippet: "int arr[3] = {2, 4, 6};\nfor (int i = 0; i < 3; i++) {\n    if (arr[i] > 3) cout << arr[i] << endl;\n}",
+        question: "What is the best way to check your understanding of tracing?",
+        answer: "The best way is to trace by hand first, then run the program and compare your prediction with the actual output."
+      },
+      {
+        page: 91,
+        title: "Friend classes",
+        explain: "A friend class can access the private members of another class. This gives special access to an entire class, not just one function.",
+        examples: [
+          "Friend classes should be used carefully because they weaken data hiding.",
+          "They are sometimes useful when two classes are very closely related.",
+          "The friendship must be declared explicitly."
+        ],
+        snippet: "class A {\n    friend class B;\nprivate:\n    int x = 10;\n};",
+        question: "How is a friend class different from a normal class relationship?",
+        answer: "A friend class gets special access to another class's private and protected members, while a normal unrelated class does not."
+      },
+      {
+        page: 92,
+        title: "Inline functions",
+        explain: "Inline functions suggest that the compiler may replace a function call with the function's code directly. They are usually best for very small functions.",
+        examples: [
+          "A short <code>square()</code> function is a common inline example.",
+          "Inlining may reduce call overhead for tiny functions.",
+          "The compiler can ignore the suggestion if it wants."
+        ],
+        snippet: "inline int square(int x) {\n    return x * x;\n}",
+        question: "Why are short functions often chosen for inline use?",
+        answer: "Because the function body is small, so replacing the call with the code is simple and may save call overhead."
+      },
+      {
+        page: 93,
+        title: "Namespaces and scope resolution",
+        explain: "Namespaces prevent name conflicts by grouping related names together. The scope resolution operator <code>::</code> is used to access a name from a namespace or class.",
+        examples: [
+          "Use <code>std::cout</code> to access cout from the standard namespace.",
+          "Create your own namespace for helper functions.",
+          "Namespaces help when different libraries use the same names."
+        ],
+        snippet: "namespace helper {\n    void greet() { cout << \"Hi\"; }\n}\nstd::cout << \"Hello\";",
+        question: "What problem do namespaces solve?",
+        answer: "They solve name conflicts by keeping related names in separate groups."
+      },
+      {
+        page: 94,
+        title: "Type casting",
+        explain: "Type casting converts a value from one type to another. Explicit casting makes the conversion clear in the code.",
+        examples: [
+          "<code>static_cast&lt;int&gt;(9.8)</code> becomes 9.",
+          "Casting can help when integer division should become decimal division.",
+          "Explicit casts are clearer than hidden automatic conversions."
+        ],
+        snippet: "double value = 9.8;\nint whole = static_cast<int>(value);",
+        question: "Why is explicit casting safer than relying on automatic conversion?",
+        answer: "Because it makes the conversion clear to the reader and reduces surprises from hidden type changes."
+      },
+      {
+        page: 95,
+        title: "Constant member functions",
+        explain: "A const member function promises not to change the object's normal data members.",
+        examples: [
+          "Getter functions are often marked const.",
+          "A const object can call only const member functions.",
+          "This helps protect objects from accidental modification."
+        ],
+        snippet: "class Student {\n    int marks;\npublic:\n    int getMarks() const { return marks; }\n};",
+        question: "What promise does a const member function make?",
+        answer: "It promises not to modify the object's normal member data."
+      },
+      {
+        page: 96,
+        title: "STL vectors",
+        explain: "A vector is a dynamic array from the STL. It can grow as you add elements.",
+        examples: [
+          "Use <code>push_back</code> to add values.",
+          "Use <code>size()</code> to get the current number of elements.",
+          "Vectors are easier and safer than manual dynamic arrays for many beginner tasks."
+        ],
+        snippet: "vector<int> nums;\nnums.push_back(10);\nnums.push_back(20);",
+        question: "What advantage does vector have over a fixed-size array?",
+        answer: "A vector can change size dynamically and comes with useful built-in functions."
+      },
+      {
+        page: 97,
+        title: "STL iterators",
+        explain: "An iterator is an object used to move through container elements one by one.",
+        examples: [
+          "Use <code>begin()</code> to get the first position.",
+          "Use <code>end()</code> to mark the stopping point after the last element.",
+          "Iterators work with many STL algorithms."
+        ],
+        snippet: "vector<int> nums = {1, 2, 3};\nfor (vector<int>::iterator it = nums.begin(); it != nums.end(); ++it) {\n    cout << *it << endl;\n}",
+        question: "What does an iterator help you do?",
+        answer: "It helps you move through the elements of a container and access them one by one."
+      },
+      {
+        page: 98,
+        title: "STL maps",
+        explain: "A map stores key-value pairs. Each key is linked to one value, which makes lookup by key convenient.",
+        examples: [
+          "Store a student's name as the key and marks as the value.",
+          "Use the key to access the related value quickly.",
+          "Maps are useful when data is naturally paired."
+        ],
+        snippet: "map<string, int> marks;\nmarks[\"Ali\"] = 85;\ncout << marks[\"Ali\"] << endl;",
+        question: "Why is a map useful for key-value data?",
+        answer: "Because it stores values by keys, which makes it easy to find or update a value using its key."
+      },
+      {
+        page: 99,
+        title: "Lambda expressions",
+        explain: "A lambda is a short unnamed function written directly where it is needed. It is useful for small one-time tasks.",
+        examples: [
+          "Use a lambda to test whether a number is even.",
+          "Lambdas work well with STL algorithms.",
+          "They avoid writing a separate full function for tiny logic."
+        ],
+        snippet: "auto isEven = [](int n) { return n % 2 == 0; };\ncout << isEven(4) << endl;",
+        question: "What is one benefit of writing a small lambda instead of a full function?",
+        answer: "It keeps short logic close to where it is used and avoids extra separate function definitions."
+      },
+      {
+        page: 100,
+        title: "Smart pointers",
+        explain: "Smart pointers manage dynamic memory automatically, which helps prevent leaks and makes ownership clearer.",
+        examples: [
+          "<code>unique_ptr</code> owns one object at a time.",
+          "When the smart pointer goes out of scope, it cleans up automatically.",
+          "Smart pointers are safer than raw <code>new</code> and <code>delete</code> in many cases."
+        ],
+        snippet: "#include <memory>\nunique_ptr<int> p = make_unique<int>(42);\ncout << *p << endl;",
+        question: "How do smart pointers help prevent memory problems?",
+        answer: "They automatically release owned memory at the right time, which helps prevent leaks and some ownership mistakes."
+      },
+      {
+        page: 101,
+        title: "Multithreading basics",
+        explain: "A thread is another path of execution inside the same program. Multiple threads can work at the same time.",
+        examples: [
+          "One thread can print numbers while another prints letters.",
+          "Threads are useful for background work or parallel tasks.",
+          "Shared data between threads must be handled carefully."
+        ],
+        snippet: "#include <thread>\nthread t([]() { cout << \"Thread running\" << endl; });\nt.join();",
+        question: "What is a thread in simple terms?",
+        answer: "A thread is a separate line of work that runs inside a program."
+      },
+      {
+        page: 102,
+        title: "Final project structure",
+        explain: "Good project structure separates input, processing, and output. This makes the program easier to plan, test, and extend.",
+        examples: [
+          "Read data in one function, process it in another, and print it in a third.",
+          "Break a big task into smaller responsibilities.",
+          "Planning structure first reduces confusion later."
+        ],
+        snippet: "// input -> process -> output",
+        question: "Why is it helpful to plan program structure before coding?",
+        answer: "It helps you organize the solution clearly and reduces mistakes from writing everything in one large block."
+      },
+      {
+        page: 103,
+        title: "Diamond problem in inheritance",
+        explain: "The diamond problem happens when one class inherits the same base through two different paths. This can lead to duplicate base data and ambiguity.",
+        examples: [
+          "A class may inherit from two classes that both inherited from the same base.",
+          "The derived class may not know which base copy to use.",
+          "Virtual inheritance is a common solution."
+        ],
+        snippet: "// A -> B, A -> C, then D inherits B and C",
+        question: "Why can the diamond problem create confusion?",
+        answer: "Because the derived class can end up with two paths to the same base, which creates ambiguity about which base member to use."
+      },
+      {
+        page: 104,
+        title: "Function pointers",
+        explain: "A function pointer stores the address of a function so the function can be called indirectly.",
+        examples: [
+          "Point to an <code>add</code> function and call it through the pointer.",
+          "This is useful when behavior should be chosen dynamically.",
+          "The pointer type must match the function signature."
+        ],
+        snippet: "int add(int a, int b) { return a + b; }\nint (*fp)(int, int) = add;\ncout << fp(2, 3) << endl;",
+        question: "What does a function pointer hold?",
+        answer: "It holds the address of a function."
+      },
+      {
+        page: 105,
+        title: "STL algorithms",
+        explain: "The STL provides algorithms like find, count, and for_each that work with standard containers.",
+        examples: [
+          "Use <code>find</code> to look for a value in a vector.",
+          "Use <code>count</code> to count matching values.",
+          "Algorithms save time and often make code shorter and clearer."
+        ],
+        snippet: "vector<int> nums = {1, 2, 2, 4};\ncout << count(nums.begin(), nums.end(), 2);",
+        question: "Why are STL algorithms useful with containers?",
+        answer: "They provide ready-made, tested operations that work directly with container data."
+      },
+      {
+        page: 106,
+        title: "Sorting and binary search using STL",
+        explain: "Binary search needs sorted data. The STL provides both sorting and binary_search to make this easy.",
+        examples: [
+          "Sort a vector first with <code>sort()</code>.",
+          "Then use <code>binary_search()</code> to check whether a value exists.",
+          "Binary search is faster than linear search on sorted data."
+        ],
+        snippet: "sort(nums.begin(), nums.end());\ncout << binary_search(nums.begin(), nums.end(), 7);",
+        question: "Why should data usually be sorted before binary search?",
+        answer: "Because binary search depends on the ordered arrangement to know which half to ignore each step."
+      },
+      {
+        page: 107,
+        title: "Custom comparators",
+        explain: "A comparator tells sorting code how two values should be ordered.",
+        examples: [
+          "Sort names by length instead of alphabetically.",
+          "Sort numbers in descending order using a custom comparison rule.",
+          "Comparators define what 'comes before' means."
+        ],
+        snippet: "sort(names.begin(), names.end(), [](const string& a, const string& b) {\n    return a.size() < b.size();\n});",
+        question: "What does a comparator decide during sorting?",
+        answer: "It decides the ordering rule used to compare two elements during sorting."
+      },
+      {
+        page: 108,
+        title: "Memory alignment and padding",
+        explain: "Compilers may add padding bytes inside structs so members line up efficiently in memory. That is why two structs with the same members can have different sizes.",
+        examples: [
+          "Member order can change the total size of a struct.",
+          "A char followed by an int may create padding space.",
+          "Alignment helps the CPU access data efficiently."
+        ],
+        snippet: "struct A { char c; int x; };\nstruct B { int x; char c; };",
+        question: "Why might two structs with the same members have different sizes?",
+        answer: "Because different member orders can cause different padding and alignment in memory."
+      },
+      {
+        page: 109,
+        title: "Union data types",
+        explain: "A union stores different members in the same memory location, so only one member's value should be considered active at a time.",
+        examples: [
+          "A struct gives each member separate storage, but a union shares one storage area.",
+          "Changing one union member can affect how the same bytes look as another member.",
+          "Unions save memory when only one of several fields is needed at a time."
+        ],
+        snippet: "union Data {\n    int i;\n    char c;\n};",
+        question: "How is a union different from a struct?",
+        answer: "A struct gives separate memory to each member, while a union makes members share the same memory space."
+      },
+      {
+        page: 110,
+        title: "Advanced preprocessor macros",
+        explain: "Macros are text replacements done before compilation. Complex macros can be risky because they do not follow normal type rules.",
+        examples: [
+          "A macro like <code>#define SQR(x) ((x) * (x))</code> expands as text.",
+          "Without careful parentheses, macros can behave unexpectedly.",
+          "Inline functions are often safer than function-like macros."
+        ],
+        snippet: "#define SQR(x) ((x) * (x))",
+        question: "What is one risk of complex macros?",
+        answer: "They can expand in unexpected ways and cause bugs because they are plain text substitution, not real typed functions."
+      },
+      {
+        page: 111,
+        title: "File buffering and flushing",
+        explain: "Output streams often use a buffer, which means data may wait in memory before being written fully. Flushing forces buffered data to be sent immediately.",
+        examples: [
+          "Use <code>flush</code> when you want data written right away.",
+          "Closing a file usually flushes it too.",
+          "Flushing is useful before a crash-prone step or when immediate output matters."
+        ],
+        snippet: "ofstream out(\"log.txt\");\nout << \"Saved\" << flush;",
+        question: "Why might flushing be important?",
+        answer: "Because it forces buffered output to be written immediately instead of waiting until later."
+      },
+      {
+        page: 112,
+        title: "Command line arguments",
+        explain: "Command line arguments are values passed to a program when it starts. They enter through the parameters of main.",
+        examples: [
+          "<code>argc</code> tells how many arguments were passed.",
+          "<code>argv</code> stores those arguments as strings.",
+          "The program name is usually the first argument."
+        ],
+        snippet: "int main(int argc, char* argv[]) {\n    cout << argv[0] << endl;\n}",
+        question: "Where do command line arguments enter the program?",
+        answer: "They enter through the parameters of <code>main</code>, usually <code>argc</code> and <code>argv</code>."
+      },
+      {
+        page: 113,
+        title: "Recursion vs iteration performance",
+        explain: "Recursion can be elegant, but iteration often uses less memory because it does not create a new function call stack frame each time.",
+        examples: [
+          "A loop factorial usually uses less memory than a recursive factorial.",
+          "Recursive code can be clearer for naturally recursive problems like trees.",
+          "Performance depends on the problem and the implementation."
+        ],
+        snippet: "int factLoop(int n) {\n    int result = 1;\n    for (int i = 2; i <= n; i++) result *= i;\n    return result;\n}",
+        question: "Why can iteration use less memory than recursion?",
+        answer: "Because iteration usually reuses the same loop state, while recursion creates additional function call frames on the stack."
+      },
+      {
+        page: 114,
+        title: "Standard exceptions",
+        explain: "The standard library provides ready-made exception types that describe common problems, which makes error handling more consistent.",
+        examples: [
+          "Use <code>std::invalid_argument</code> for bad input values.",
+          "Use <code>std::runtime_error</code> for runtime problems.",
+          "Standard exception types are easier to recognize and handle consistently."
+        ],
+        snippet: "try {\n    throw invalid_argument(\"Bad input\");\n} catch (const exception& ex) {\n    cout << ex.what();\n}",
+        question: "What is the benefit of using standard exception types?",
+        answer: "They provide clear, well-known error categories and work well with common exception handling patterns."
+      },
+      {
+        page: 115,
+        title: "Memory leaks and debugging",
+        explain: "A memory leak happens when dynamic memory is allocated but never released. Over time, leaked memory wastes system resources.",
+        examples: [
+          "Creating memory with <code>new</code> and forgetting <code>delete</code> causes a leak.",
+          "Leaks matter more in long-running or repeated tasks.",
+          "Smart pointers help prevent many leaks automatically."
+        ],
+        snippet: "int* p = new int(10);\n// delete p; is missing here",
+        question: "What is a memory leak?",
+        answer: "A memory leak is memory that was allocated but never freed, so the program loses access to it while it still occupies space."
+      },
+      {
+        page: 116,
+        title: "Operator overloading",
+        explain: "Operator overloading lets a class define how operators such as <code>+</code> should behave for its objects.",
+        examples: [
+          "A Point class can overload <code>+</code> to add coordinates.",
+          "Overloaded operators should behave in a natural and predictable way.",
+          "Do not overload operators in confusing ways."
+        ],
+        snippet: "class Point {\npublic:\n    int x, y;\n    Point operator+(const Point& other) {\n        return {x + other.x, y + other.y};\n    }\n};",
+        question: "Why should overloaded operators still behave clearly?",
+        answer: "Because readers expect operators to feel natural, and confusing operator behavior makes code harder to understand and trust."
+      },
+      {
+        page: 117,
+        title: "Static casting and conversions",
+        explain: "<code>static_cast</code> performs an explicit conversion and makes that conversion obvious in the code.",
+        examples: [
+          "Convert a float score to int with <code>static_cast&lt;int&gt;(score)</code>.",
+          "Use it when you want to show that a conversion is intentional.",
+          "Explicit casts help code reviews and debugging."
+        ],
+        snippet: "float score = 92.7f;\nint whole = static_cast<int>(score);",
+        question: "What does static_cast show clearly in your code?",
+        answer: "It shows clearly that the type conversion is intentional and expected."
+      },
+      {
+        page: 118,
+        title: "C++11 features: auto and range-based loops",
+        explain: "The <code>auto</code> keyword lets the compiler infer a variable's type. Range-based for loops make container traversal shorter and easier to read.",
+        examples: [
+          "Use <code>auto it = nums.begin();</code> when the iterator type is long.",
+          "Use <code>for (int x : nums)</code> to visit each value directly.",
+          "Range-based loops are great when you do not need the index."
+        ],
+        snippet: "vector<int> nums = {1, 2, 3};\nfor (auto x : nums) {\n    cout << x << endl;\n}",
+        question: "When is a range-based for loop easier to read?",
+        answer: "It is easier to read when you simply want each element and do not need manual indexes or iterator details."
+      },
+      {
+        page: 119,
+        title: "mutable keyword",
+        explain: "The <code>mutable</code> keyword allows a specific member to change even inside a const member function. It should be used only for special cases.",
+        examples: [
+          "A cache or access counter is a common reason to use mutable.",
+          "Do not use mutable just to bypass const rules carelessly.",
+          "Keep its use limited and well justified."
+        ],
+        snippet: "class Counter {\n    mutable int hits = 0;\npublic:\n    int get() const {\n        hits++;\n        return hits;\n    }\n};",
+        question: "Why is mutable only for special cases?",
+        answer: "Because it breaks the normal idea that const functions should not change object state, so it should be used only when that exception truly makes sense."
+      },
+      {
+        page: 120,
+        title: "Final project guidelines and best practices",
+        explain: "A good beginner project uses clear structure, readable names, validation, and simple testing. The goal is code that works and is easy to follow.",
+        examples: [
+          "Split the project into small functions with clear jobs.",
+          "Validate user input before using it.",
+          "Test normal cases and edge cases before calling the project finished."
+        ],
+        snippet: "// Good habits: plan first, use functions, validate input, test output",
+        question: "What three habits make a beginner project better organized?",
+        answer: "Three strong habits are planning the structure first, using clear function-based organization, and validating plus testing the program carefully."
+      }
+    ];
+
+    const sectionLabels = [
+      "Pages 1-10", "Pages 11-20", "Pages 21-30", "Pages 31-40", "Pages 41-50", "Pages 51-60",
+      "Pages 61-70", "Pages 71-80", "Pages 81-90", "Pages 91-100", "Pages 101-110", "Pages 111-120"
+    ];
+
+    const content = document.getElementById('content');
+    const jumpLinks = document.getElementById('jumpLinks');
+    const search = document.getElementById('search');
+
+    function renderSections(filter = '') {
+      const q = filter.trim().toLowerCase();
+      content.innerHTML = '';
+      jumpLinks.innerHTML = '';
+
+      for (let sectionIndex = 0; sectionIndex < 12; sectionIndex++) {
+        const start = sectionIndex * 10 + 1;
+        const end = start + 9;
+        const sectionPages = pages.filter(page => page.page >= start && page.page <= end);
+        const filteredPages = sectionPages.filter(page => {
+          if (!q) return true;
+          const haystack = [
+            String(page.page),
+            page.title,
+            page.explain,
+            page.question,
+            page.answer,
+            page.examples.join(' '),
+            page.snippet
+          ].join(' ').toLowerCase();
+          return haystack.includes(q);
+        });
+
+        if (!filteredPages.length) {
+          continue;
+        }
+
+        const sectionId = `section-${sectionIndex + 1}`;
+        const link = document.createElement('a');
+        link.href = `#${sectionId}`;
+        link.textContent = sectionLabels[sectionIndex];
+        jumpLinks.appendChild(link);
+
+        const section = document.createElement('section');
+        section.className = 'section-block';
+        section.id = sectionId;
+
+        const title = document.createElement('h2');
+        title.className = 'section-title';
+        title.textContent = sectionLabels[sectionIndex];
+        section.appendChild(title);
+
+        const cards = document.createElement('div');
+        cards.className = 'cards';
+
+        filteredPages.forEach(page => {
+          const card = document.createElement('article');
+          card.className = 'card';
+
+          card.innerHTML = `
+            <span class="page-tag">Page ${page.page}</span>
+            <h3 class="topic">${page.title}</h3>
+            <p class="block"><span class="label">Beginner idea:</span>${page.explain}</p>
+            <div>
+              <p class="block"><span class="label">Examples:</span></p>
+              <ul class="examples">
+                ${page.examples.map(example => `<li>${example}</li>`).join('')}
+              </ul>
+            </div>
+            <p class="block"><span class="label">Practice question:</span>${page.question}</p>
+            <div class="answer"><span class="label">Simple answer:</span>${page.answer}</div>
+            <pre class="snippet">${escapeHtml(page.snippet)}</pre>
+          `;
+
+          cards.appendChild(card);
+        });
+
+        section.appendChild(cards);
+        content.appendChild(section);
+      }
+
+      if (!content.children.length) {
+        content.innerHTML = '<section class="section-block"><h2 class="section-title">No matches</h2><p class="meta">Try a simpler search term such as array, pointer, recursion, page 42, or operator.</p></section>';
+      }
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    search.addEventListener('input', (event) => {
+      renderSections(event.target.value);
+    });
+
+    renderSections();
+  </script>
+</body>
+</html>
+
+
 <!--C++ Course Notes Summary (Pages 1–120)
 Pages 1–10: Basics of C++
 Introduction to C++, main(), cout, cin, headers.
