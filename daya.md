@@ -69,12 +69,10 @@ void page7(){
 }
 ```
 
-``cpp
-
+```cpp
 // x++, ++x
 void page8(){
     int x = 10; // x = 10
-  
     int daya = x; // x = 10
     x = x + 1; // x = 11
     
@@ -83,7 +81,6 @@ void page8(){
     // starry = 11
     starry = starry + 10; // starry += 10, starry = 21
     starry += 10; // starry = 31
-    
     starry = starry * 10; // starry *= 10, starry = 310
     starry = starry - 10; // starry -= 10, starry = 300
   
@@ -97,7 +94,6 @@ void page8(){
 ```
 
 ```cpp
-
 void page10(){
     int n = 15;
     bool daya = (n < 10);
