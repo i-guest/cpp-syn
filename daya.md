@@ -112,3 +112,90 @@ void page10(){
 }
 
 ```
+
+
+
+
+```cpp
+// page 11-20
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+// " "
+// ' '
+
+void page11() {
+    int x = 3;
+    int y = 4;
+    if (x < y) {
+        x = x + 2;
+        y = y * 2;
+    }
+    cout << x + y + 1 << endl;
+    
+    int studentAge = 20000;
+    cout << sizeof(int) << endl;
+    cout << sizeof(double) << endl;
+    cout << sizeof(bool) << endl;
+    // 1 switch
+    
+    int marks = 40;
+    if (marks >= 40) {
+        cout << "Pass" << endl;
+    }
+}
+
+void page14(){
+   string hedaya;
+   cin >> hedaya;
+   cout << "hello, " + hedaya << endl;
+    // '1'
+}
+
+void page15() {
+    // i starts from 95
+    // i will run till i <= 100
+    // every step i = i + 1
+    
+    for (int i = 95; i <=  100; i += 1) {
+        cout << i << endl;
+    }
+    
+    int marks = 58;
+    if (marks >= 80) {
+        cout << "A";
+    }
+    else if (marks >= 70){
+        cout << "B";
+    }
+    else if (marks >= 60) {
+        cout << "C";
+    }
+    else {
+        cout << "runs regardless if all are false";
+    }
+        
+    
+}
+
+void page16(){
+    int hedaya = 0;
+    for(int i = 1; i <= 20; i++){
+        hedaya = hedaya + i;
+        cout << hedaya << endl;
+    }
+    
+    int starry = 1;
+    while (starry <= 20) {
+        // hedaya = hedaya + i;
+        // cout << hedaya << endl;
+        starry++;
+    }
+}
+int main() {
+    page16();
+    return 0;
+}
+```
